@@ -4,7 +4,6 @@ let players = [];
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
-  loadPreviousSessions();
   setupEventListeners();
   addInitialPlayerInputs();
 });
@@ -75,6 +74,9 @@ async function handleCreateSession(e) {
     const playersResult = await API.addPlayers(session.id, playerNames);
     players = playersResult.players;
 
+    // Save session to localStorage for persistence
+    saveCurrentSession(session.id);
+
     // Switch to session screen
     showSessionScreen();
 
@@ -102,7 +104,7 @@ async function loadPreviousSessions() {
           <div class="name">${session.name}</div>
           <div class="date">${new Date(session.created_at).toLocaleDateString()}</div>
         </div>
-        <span>${session.ended_at ? 'Ended' : 'Active'}</span>
+        <span class="status ${session.ended_at ? 'ended' : 'active'}">${session.ended_at ? 'Ended' : 'Active'}</span>
       </div>
     `).join('');
 
@@ -116,15 +118,21 @@ async function loadSession(sessionId) {
     currentSession = await API.getSession(sessionId);
     players = await API.getPlayers(sessionId);
 
+    // Save session to localStorage for persistence
+    saveCurrentSession(sessionId);
+
     showSessionScreen();
     await refreshSessionData();
 
   } catch (error) {
-    alert('Error loading session: ' + error.message);
+    console.error('Error loading session:', error);
+    // If session doesn't exist, clear saved session
+    clearSavedSession();
   }
 }
 
 function showSessionScreen() {
+  document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('setup-screen').classList.add('hidden');
   document.getElementById('summary-screen').classList.add('hidden');
   document.getElementById('session-screen').classList.remove('hidden');
@@ -133,9 +141,13 @@ function showSessionScreen() {
 }
 
 function showSetupScreen() {
+  document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('session-screen').classList.add('hidden');
   document.getElementById('summary-screen').classList.add('hidden');
   document.getElementById('setup-screen').classList.remove('hidden');
+
+  // Load previous sessions
+  loadPreviousSessions();
 }
 
 // Court display
@@ -186,7 +198,7 @@ async function renderCourts() {
           <div class="court-card empty">
             <div class="court-header">
               <h4>Court ${court.court_number}</h4>
-              <span class="badge">Empty</span>
+              <span class="badge" style="background: #94a3b8;">Empty</span>
             </div>
             <div class="empty-state">
               <p>No players assigned</p>
@@ -390,6 +402,10 @@ async function endSession() {
 
   try {
     await API.endSession(currentSession.id);
+
+    // Clear saved session
+    clearSavedSession();
+
     await showSummary();
 
   } catch (error) {

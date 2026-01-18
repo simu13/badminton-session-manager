@@ -2,18 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#6366f1">
   <title>Badminton Session Manager</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
   <div class="container">
     <header>
       <h1>Badminton Session Manager</h1>
+      <p class="subtitle">Manage rotations, track scores, view stats</p>
     </header>
 
+    <!-- User Bar (shown when logged in) -->
+    <div id="user-bar" class="user-bar hidden">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">G</div>
+        <div>
+          <div class="user-name" id="user-name">Guest</div>
+          <div class="user-email" id="user-email"></div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="handleLogout()">Sign Out</button>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen">
+      <div class="login-section">
+        <div class="login-card">
+          <h2>Welcome!</h2>
+          <p>Sign in to save your sessions and access them from any device</p>
+
+          <button class="btn-google" onclick="signInWithGoogle()">
+            <svg viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continue with Google
+          </button>
+
+          <div class="login-divider"><span>or</span></div>
+
+          <button class="btn-guest" onclick="continueAsGuest()">Continue as Guest</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Setup Screen -->
-    <div id="setup-screen" class="screen">
+    <div id="setup-screen" class="screen hidden">
       <div class="card">
         <h2>Start New Session</h2>
         <form id="setup-form">
@@ -43,7 +88,7 @@
       </div>
 
       <div class="card" id="previous-sessions">
-        <h2>Previous Sessions</h2>
+        <h2>Your Sessions</h2>
         <div id="sessions-list"></div>
       </div>
     </div>
@@ -53,8 +98,8 @@
       <div class="session-header">
         <h2 id="session-title"></h2>
         <div class="session-actions">
-          <button class="btn-secondary" onclick="showSummary()">View Summary</button>
-          <button class="btn-danger" onclick="endSession()">End Session</button>
+          <button class="btn-secondary" onclick="showSummary()">Summary</button>
+          <button class="btn-danger" onclick="endSession()">End</button>
         </div>
       </div>
 
@@ -67,7 +112,9 @@
         <div class="waiting-section">
           <h3>Waiting Queue</h3>
           <div id="waiting-queue"></div>
-          <button class="btn-primary" onclick="autoAssignMatches()">Auto-Assign Next Matches</button>
+          <button class="btn-primary" onclick="autoAssignMatches()" style="width:100%; margin-top: 8px;">
+            Auto-Assign Matches
+          </button>
         </div>
       </div>
 
@@ -81,7 +128,7 @@
     <div id="summary-screen" class="screen hidden">
       <div class="summary-header">
         <h2>Session Summary</h2>
-        <button class="btn-secondary" onclick="backToSession()">Back to Session</button>
+        <button class="btn-secondary" onclick="backToSession()">Back</button>
       </div>
 
       <div class="summary-content">
@@ -92,18 +139,20 @@
 
         <div class="card">
           <h3>Player Stats</h3>
-          <table id="player-stats-table">
-            <thead>
-              <tr>
-                <th>Player</th>
-                <th>Games</th>
-                <th>Wins</th>
-                <th>Losses</th>
-                <th>Win Rate</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+          <div style="overflow-x: auto;">
+            <table id="player-stats-table">
+              <thead>
+                <tr>
+                  <th>Player</th>
+                  <th>Games</th>
+                  <th>Wins</th>
+                  <th>Losses</th>
+                  <th>Win %</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
         </div>
 
         <div class="card">
@@ -117,7 +166,7 @@
     <div id="score-modal" class="modal hidden">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Enter Game Score</h3>
+          <h3>Enter Score</h3>
           <button class="btn-close" onclick="closeScoreModal()">×</button>
         </div>
         <form id="score-form">
@@ -131,21 +180,138 @@
             <div class="team">
               <h4>Team 1</h4>
               <p id="score-team1-names"></p>
-              <input type="number" id="team1-score" min="0" max="30" placeholder="Score" required>
+              <input type="number" id="team1-score" min="0" max="30" placeholder="0" required>
             </div>
             <div class="vs">VS</div>
             <div class="team">
               <h4>Team 2</h4>
               <p id="score-team2-names"></p>
-              <input type="number" id="team2-score" min="0" max="30" placeholder="Score" required>
+              <input type="number" id="team2-score" min="0" max="30" placeholder="0" required>
             </div>
           </div>
 
-          <button type="submit" class="btn-primary">Save Score</button>
+          <button type="submit" class="btn-primary" style="width: 100%;">Save Score</button>
         </form>
       </div>
     </div>
   </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDemoKeyForTesting123456789",
+      authDomain: "badminton-session-manager.firebaseapp.com",
+      projectId: "badminton-session-manager",
+      storageBucket: "badminton-session-manager.appspot.com",
+      messagingSenderId: "123456789",
+      appId: "1:123456789:web:abcdef123456"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    // Auth state
+    let currentUser = null;
+
+    // Check auth state on load
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        currentUser = user;
+        showUserBar(user);
+        showSetupScreen();
+        restoreSession();
+      } else {
+        // Check if guest mode
+        const guestMode = localStorage.getItem('guestMode');
+        if (guestMode === 'true') {
+          currentUser = { displayName: 'Guest', email: '', isGuest: true };
+          showUserBar(currentUser);
+          showSetupScreen();
+          restoreSession();
+        }
+      }
+    });
+
+    // Google Sign In
+    async function signInWithGoogle() {
+      try {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await auth.signInWithPopup(provider);
+      } catch (error) {
+        console.error('Sign in error:', error);
+        // If popup blocked or error, continue as guest
+        alert('Sign in failed. Continuing as guest.');
+        continueAsGuest();
+      }
+    }
+
+    // Continue as Guest
+    function continueAsGuest() {
+      localStorage.setItem('guestMode', 'true');
+      currentUser = { displayName: 'Guest', email: '', isGuest: true };
+      showUserBar(currentUser);
+      showSetupScreen();
+      restoreSession();
+    }
+
+    // Logout
+    async function handleLogout() {
+      try {
+        await auth.signOut();
+      } catch (e) {}
+      localStorage.removeItem('guestMode');
+      localStorage.removeItem('currentSessionId');
+      currentUser = null;
+      document.getElementById('user-bar').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('setup-screen').classList.add('hidden');
+      document.getElementById('session-screen').classList.add('hidden');
+      document.getElementById('summary-screen').classList.add('hidden');
+    }
+
+    // Show user bar
+    function showUserBar(user) {
+      const userBar = document.getElementById('user-bar');
+      const avatar = document.getElementById('user-avatar');
+      const name = document.getElementById('user-name');
+      const email = document.getElementById('user-email');
+
+      if (user.photoURL) {
+        avatar.innerHTML = `<img src="${user.photoURL}" alt="avatar">`;
+      } else {
+        avatar.textContent = (user.displayName || 'G')[0].toUpperCase();
+      }
+
+      name.textContent = user.displayName || 'Guest';
+      email.textContent = user.email || 'Local session';
+
+      userBar.classList.remove('hidden');
+      document.getElementById('login-screen').classList.add('hidden');
+    }
+
+    // Restore session on reload
+    function restoreSession() {
+      const savedSessionId = localStorage.getItem('currentSessionId');
+      if (savedSessionId) {
+        loadSession(parseInt(savedSessionId));
+      }
+    }
+
+    // Save current session to localStorage
+    function saveCurrentSession(sessionId) {
+      localStorage.setItem('currentSessionId', sessionId);
+    }
+
+    // Clear saved session
+    function clearSavedSession() {
+      localStorage.removeItem('currentSessionId');
+    }
+  </script>
 
   <script src="js/api.js"></script>
   <script src="js/rotation.js"></script>
