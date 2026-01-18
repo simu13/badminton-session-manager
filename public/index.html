@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badminton Session Manager</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Badminton Session Manager</h1>
+    </header>
+
+    <!-- Setup Screen -->
+    <div id="setup-screen" class="screen">
+      <div class="card">
+        <h2>Start New Session</h2>
+        <form id="setup-form">
+          <div class="form-group">
+            <label for="session-name">Session Name</label>
+            <input type="text" id="session-name" placeholder="e.g., Sunday Morning Game" required>
+          </div>
+
+          <div class="form-group">
+            <label for="num-courts">Number of Courts</label>
+            <input type="number" id="num-courts" min="1" max="10" value="2" required>
+          </div>
+
+          <div class="form-group">
+            <label>Players</label>
+            <div id="player-inputs">
+              <div class="player-input">
+                <input type="text" class="player-name" placeholder="Player 1" required>
+                <button type="button" class="btn-remove" onclick="removePlayer(this)">×</button>
+              </div>
+            </div>
+            <button type="button" class="btn-secondary" onclick="addPlayerInput()">+ Add Player</button>
+          </div>
+
+          <button type="submit" class="btn-primary">Start Session</button>
+        </form>
+      </div>
+
+      <div class="card" id="previous-sessions">
+        <h2>Previous Sessions</h2>
+        <div id="sessions-list"></div>
+      </div>
+    </div>
+
+    <!-- Active Session Screen -->
+    <div id="session-screen" class="screen hidden">
+      <div class="session-header">
+        <h2 id="session-title"></h2>
+        <div class="session-actions">
+          <button class="btn-secondary" onclick="showSummary()">View Summary</button>
+          <button class="btn-danger" onclick="endSession()">End Session</button>
+        </div>
+      </div>
+
+      <div class="session-content">
+        <div class="courts-section">
+          <h3>Courts</h3>
+          <div id="courts-container"></div>
+        </div>
+
+        <div class="waiting-section">
+          <h3>Waiting Queue</h3>
+          <div id="waiting-queue"></div>
+          <button class="btn-primary" onclick="autoAssignMatches()">Auto-Assign Next Matches</button>
+        </div>
+      </div>
+
+      <div class="games-history">
+        <h3>Recent Games</h3>
+        <div id="games-list"></div>
+      </div>
+    </div>
+
+    <!-- Summary Screen -->
+    <div id="summary-screen" class="screen hidden">
+      <div class="summary-header">
+        <h2>Session Summary</h2>
+        <button class="btn-secondary" onclick="backToSession()">Back to Session</button>
+      </div>
+
+      <div class="summary-content">
+        <div class="card">
+          <h3>Overview</h3>
+          <div id="summary-overview"></div>
+        </div>
+
+        <div class="card">
+          <h3>Player Stats</h3>
+          <table id="player-stats-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Games</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Win Rate</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>Top Partnerships</h3>
+          <div id="partnerships-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Score Entry Modal -->
+    <div id="score-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Enter Game Score</h3>
+          <button class="btn-close" onclick="closeScoreModal()">×</button>
+        </div>
+        <form id="score-form">
+          <input type="hidden" id="score-court-number">
+          <input type="hidden" id="score-player1-id">
+          <input type="hidden" id="score-player2-id">
+          <input type="hidden" id="score-player3-id">
+          <input type="hidden" id="score-player4-id">
+
+          <div class="score-teams">
+            <div class="team">
+              <h4>Team 1</h4>
+              <p id="score-team1-names"></p>
+              <input type="number" id="team1-score" min="0" max="30" placeholder="Score" required>
+            </div>
+            <div class="vs">VS</div>
+            <div class="team">
+              <h4>Team 2</h4>
+              <p id="score-team2-names"></p>
+              <input type="number" id="team2-score" min="0" max="30" placeholder="Score" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary">Save Score</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/rotation.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

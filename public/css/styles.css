@@ -1,0 +1,528 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+header h1 {
+  color: #2c3e50;
+  font-size: 2rem;
+}
+
+/* Screens */
+.screen {
+  display: block;
+}
+
+.screen.hidden {
+  display: none;
+}
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card h2,
+.card h3 {
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* Player inputs */
+#player-inputs {
+  margin-bottom: 12px;
+}
+
+.player-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.player-input input {
+  flex: 1;
+}
+
+.btn-remove {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #e74c3c;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remove:hover {
+  background: #c0392b;
+}
+
+/* Buttons */
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2980b9;
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #7f8c8d;
+}
+
+.btn-danger {
+  background: #e74c3c;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c0392b;
+}
+
+/* Session screen */
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.session-header h2 {
+  color: #2c3e50;
+}
+
+.session-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.session-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .session-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Courts */
+.courts-section h3,
+.waiting-section h3 {
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+#courts-container {
+  display: grid;
+  gap: 16px;
+}
+
+.court-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.court-card.empty {
+  background: #f8f9fa;
+  border: 2px dashed #ddd;
+}
+
+.court-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.court-header h4 {
+  color: #2c3e50;
+}
+
+.court-teams {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.court-team {
+  text-align: center;
+}
+
+.court-team h5 {
+  font-size: 14px;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+}
+
+.court-team p {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.court-vs {
+  font-weight: bold;
+  color: #e74c3c;
+  font-size: 18px;
+}
+
+.court-actions {
+  text-align: center;
+}
+
+.btn-end-game {
+  padding: 8px 16px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-end-game:hover {
+  background: #219a52;
+}
+
+/* Waiting queue */
+.waiting-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#waiting-queue {
+  margin-bottom: 16px;
+}
+
+.waiting-player {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.waiting-player .name {
+  font-weight: 600;
+}
+
+.waiting-player .wait-info {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+/* Games history */
+.games-history {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.games-history h3 {
+  margin-bottom: 16px;
+  color: #2c3e50;
+}
+
+.game-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.game-item .teams {
+  flex: 1;
+}
+
+.game-item .score {
+  font-weight: bold;
+  font-size: 18px;
+  color: #2c3e50;
+}
+
+.game-item .time {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h3 {
+  color: #2c3e50;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #7f8c8d;
+}
+
+.score-teams {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.team {
+  text-align: center;
+  flex: 1;
+}
+
+.team h4 {
+  color: #3498db;
+  margin-bottom: 8px;
+}
+
+.team p {
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.team input {
+  width: 80px;
+  text-align: center;
+  font-size: 24px;
+  padding: 8px;
+}
+
+.vs {
+  font-weight: bold;
+  font-size: 24px;
+  color: #e74c3c;
+}
+
+/* Summary screen */
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.summary-content {
+  display: grid;
+  gap: 20px;
+}
+
+#summary-overview {
+  font-size: 18px;
+}
+
+#summary-overview p {
+  margin-bottom: 8px;
+}
+
+#player-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#player-stats-table th,
+#player-stats-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+#player-stats-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+#player-stats-table tr:hover {
+  background: #f8f9fa;
+}
+
+.partnership-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* Previous sessions */
+#sessions-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.session-item:hover {
+  background: #e8e8e8;
+}
+
+.session-item .name {
+  font-weight: 600;
+}
+
+.session-item .date {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+/* Empty states */
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: #7f8c8d;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  .session-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .score-teams {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .vs {
+    margin: 10px 0;
+  }
+}
